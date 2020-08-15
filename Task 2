@@ -1,0 +1,20 @@
+name = "Axel"
+print(f"{name}")
+
+surname = "Ivanov"
+print(f"{surname}")
+
+year = "1991"
+print(f"{year}")
+
+city = "Moscow"
+print(f"{city}")
+
+email = "sdf@mail.ru"
+print(f"{email}")
+
+phone_number = "89995552424"
+print(f"{phone_number}")
+
+def user(name, surname, year, city, email, phone_number):
+    print(f"{name},{surname},{year},{city},{email},{phone_number}")
