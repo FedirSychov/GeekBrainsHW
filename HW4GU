@@ -1,0 +1,118 @@
+Task 1
+
+import sys
+
+# аргументы скриптов
+try:
+    file, salary_hour, prize = sys.argv
+except:
+    print("invalid args")
+    exit()
+
+
+# подсчет зарплаты
+def Salary(hours, salary_pro_hour, prize_):
+    return int(hours) * int(salary_pro_hour) + int(prize_)
+
+
+print(Salary(120, salary_hour, prize))
+
+
+
+Task 2
+
+import random
+
+# генератор списка
+list = [random.randrange(20, 40) for i in range(10)]
+
+print(list)
+list_ans = []
+
+# проверка следующего
+prev = 999
+for i in list:
+    if i > prev:
+        list_ans.append(i)
+    prev = i
+
+print(list_ans)
+
+
+
+Task 3
+
+print([x for x in range(20, 241) if x % 20 == 0 or x % 21 == 0])
+
+
+
+Task 4
+
+import random
+
+# список случайных элементов
+list = [random.randrange(10, 20) for i in range(10)]
+# список уникальных элементов из прошлого списка
+list_uniq = [el for el in list if list.count(el) == 1]
+
+
+print(list)
+print(list_uniq)
+
+
+
+Task 5
+
+import functools
+
+# генератор списка
+list = [el for el in range(100, 1001) if el % 2 == 0]
+
+# произведение всех элементов из списка
+mult = functools.reduce(lambda total, amount: total * amount, list)
+
+print(mult)
+
+
+
+Task 6
+
+from itertools import count, cycle
+
+
+# вывод последовательности чисел
+def Func1(start):
+    for x in count(start, 1):
+        print(x)
+        if (x == start + 10): break
+
+
+# повтор строки или списка с ограничением по количеству раз
+def Func2(*a):
+    res = cycle(a)
+    counter = 0
+    for i in res:
+        counter += 1
+        print(i)
+        if counter == 20:
+            exit()
+
+
+Func1(12)
+Func2('df')
+
+
+
+Task 7
+
+# функция факториала через цикл
+def fact(max):
+    factorial = 1
+    for i in range(1, max + 1):
+        factorial *= i
+        yield factorial
+
+
+# вызов функции
+for num in fact(7):
+    print(num)
