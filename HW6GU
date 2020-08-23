@@ -1,0 +1,459 @@
+Task 1
+
+'''
+1. Создать класс TrafficLight (светофор) и определить у него
+один атрибут color (цвет) и метод running (запуск). Атрибут
+реализовать как приватный. В рамках метода реализовать переключение
+светофора в режимы: красный, желтый, зеленый. Продолжительность первого
+состояния (красный) составляет 7 секунд, второго (желтый) — 2 секунды,
+третьего (зеленый) — на ваше усмотрение. Переключение между режимами
+должно осуществляться только в указанном порядке (красный, желтый, зеленый).
+Проверить работу примера, создав экземпляр и вызвав описанный метод.
+'''
+
+import time
+
+# класс светофора
+class TrafficLight:
+    __color: str
+    # ограничитель
+    count = 0
+    # метод запуска светофора
+    def running(self, color, prev_color):
+        if self.count <= 6:
+            self.count += 1
+            print(f"Текущий цвет: {color}")
+            # если предыдущий - красный, то запускаем желтый
+            if color == "красный":
+                time.sleep(4)
+                self.running("желтый", "красный")
+            # если предыдущий - зеленый, запускаем желтый
+            elif color == "зеленый":
+                time.sleep(6)
+                self.running("желтый", "зеленый")
+            # если предыдущий - желтый, смотрим, какой был до него и запускаем красный или зеленый
+            else:
+                if prev_color == "красный":
+                    time.sleep(2)
+                    self.running("зеленый", "красный")
+                else:
+                    time.sleep(2)
+                    self.running("красный", "зеленый")
+
+# объект класса
+light = TrafficLight()
+
+light.running("красный", "желтый")
+
+Result:
+
+Текущий цвет: красный
+Текущий цвет: желтый
+Текущий цвет: зеленый
+Текущий цвет: желтый
+Текущий цвет: красный
+Текущий цвет: желтый
+Текущий цвет: зеленый
+
+
+
+======================================================================
+
+Task 2
+
+'''
+2. Реализовать класс Road (дорога), в котором определить атрибуты:
+length (длина), width (ширина).
+Значения данных атрибутов должны передаваться при создании экземпляра класса.
+Атрибуты сделать защищенными. Определить метод расчета массы асфальта,
+необходимого для покрытия всего дорожного полотна.
+Использовать формулу: длина*ширина*масса асфальта для покрытия одного кв метра
+дороги асфальтом, толщиной в 1 см*число см толщины полотна. Проверить работу метода.
+Например: 20м*5000м*25кг*5см = 12500 т
+'''
+
+
+class Road:
+    _length: float
+    _width: float
+    __weight = 0.025  # в тоннах
+    __height = 5
+
+    def __init__(self, lenght, width):
+        self._length = lenght
+        self._width = width
+
+    def count(self):
+        return f"{self._length * self._width * self.__weight * self.__height} т."
+
+
+new_road = Road(5000, 20)
+
+print(new_road.count())
+
+
+Result: 12500.0 т.
+
+
+
+=============================================================
+
+Task 3
+
+'''
+3. Реализовать базовый класс Worker (работник),
+в котором определить атрибуты: name, surname,
+position (должность), income (доход). Последний
+атрибут должен быть защищенным и ссылаться на словарь,
+содержащий элементы: оклад и премия, например,
+{"wage": wage, "bonus": bonus}. Создать класс Position
+(должность) на базе класса Worker. В классе Position
+реализовать методы получения полного имени сотрудника
+(get_full_name) и дохода с учетом премии (get_total_income).
+Проверить работу примера на реальных данных (создать
+экземпляры класса Position, передать данные, проверить
+значения атрибутов, вызвать методы экземпляров).
+'''
+
+
+class Worker:
+    name: str
+    surname: str
+    position: str
+    _income = {"wage": float, "bonus": float}
+
+    # получить словарь с оплатой
+    def get_income(self):
+        return self._income
+
+    # конструктор
+    def __init__(self, name, surname, position, wage, bonus):
+        self.name = name
+        self.surname = surname
+        self.position = position
+        self._income["wage"] = wage
+        self._income["bonus"] = bonus
+
+
+class Position(Worker):
+    # получить имя и фамилию
+    def get_full_name(self):
+        return f"{self.name} {self.surname}"
+
+    # конструктор
+    def __init__(self, name, surname, wage, bonus, position):
+        super(Position, self).__init__(name, surname, wage=wage, bonus=bonus, position=position)
+
+    # получить прибыль
+    def get_total_income(Worker):
+        return Worker.get_income()["wage"] + Worker.get_income()["bonus"]
+
+
+Maxim = Position("Maxim", "Doe", 110000, 30000, "Boss")
+
+print(Position.get_full_name(Maxim))
+print(Position.get_total_income(Maxim))
+
+
+Result: 
+
+Maxim Doe
+140000
+
+
+
+============================================================
+
+Task 4
+
+'''
+4.Реализуйте базовый класс Car. У данного класса должны быть следующие атрибуты:
+speed, color, name, is_police (булево). А также методы: go, stop, turn(direction),
+которые должны сообщать, что машина поехала, остановилась, повернула (куда).
+Опишите несколько дочерних классов: TownCar, SportCar, WorkCar, PoliceCar.
+Добавьте в базовый класс метод show_speed, который должен показывать текущую
+скорость автомобиля. Для классов TownCar и WorkCar переопределите метод show_speed.
+При значении скорости свыше 60 (TownCar) и 40 (WorkCar) должно выводиться сообщение
+о превышении скорости.
+'''
+
+
+# класс машины
+class Car:
+    speed: float
+    color: str
+    name: str
+    is_police: bool
+
+    # конструктор
+    def __init__(self, speed, color, name, is_police: bool):
+        self.speed = speed
+        self.color = color
+        self.name = name
+        self.is_police = is_police
+
+    # метод ехать
+    def go(self):
+        print("Машина поехала")
+
+    # метод стоять
+    def stop(self):
+        print("Машина остановилась")
+
+    # метод повернуть (направление)
+    def turn(self, direction):
+        print(f"Машина повернула {direction}")
+
+    # метод показать скорость
+    def show_speed(self):
+        return self.speed
+
+
+# класс городской машины
+class TownCar(Car):
+    # переопределенный конструктор
+    def __init__(self, speed, color, name, is_police=False):
+        super().__init__(speed, color, name, is_police)
+
+    # переопределенный метод показа скорости с проверкой превышения
+    def show_speed(self):
+        if self.speed > 60:
+            return f"Вы превысили скорость! Ваша скорость {self.speed} км/час"
+        else:
+            return f"Ваша скорость {self.speed} км/час"
+
+
+# класс спортивного автомобиля
+class SportCar(Car):
+    # переопределенный конструктор
+    def __init__(self, speed, color, name, is_police=False):
+        super().__init__(speed, color, name, is_police)
+
+
+# класс рабочей машины
+class WorkCar(Car):
+    # переопределенный конструктор
+    def __init__(self, speed, color, name, is_police=False):
+        super().__init__(speed, color, name, is_police)
+
+    # переопределенный метод показа скорости с проверкой на превышение
+    def show_speed(self):
+        if self.speed > 40:
+            return f"Вы превысили скорость! Ваша скорость {self.speed} км/час"
+        else:
+            return f"Ваша скорость {self.speed} км/час"
+
+
+# класс полицейской машины
+class PoliceCar(Car):
+    # переопределнный конструктор
+    def __init__(self, speed, color, name, is_police=True):
+        super().__init__(speed, color, name, is_police)
+
+
+
+==========================================================
+
+Task 5
+
+'''
+5. Создайте экземпляры классов, передайте значения атрибутов.
+Выполните доступ к атрибутам, выведите результат.
+Выполните вызов методов и также покажите результат.
+
+Насколько я понял, данное задание относится к программе
+из предыдущего задания, поэтому скопируем все классы.
+'''
+
+
+# класс машины
+class Car:
+    speed: float
+    color: str
+    name: str
+    is_police: bool
+
+    # конструктор
+    def __init__(self, speed, color, name, is_police: bool):
+        self.speed = speed
+        self.color = color
+        self.name = name
+        self.is_police = is_police
+
+    # метод ехать
+    def go(self):
+        print("Машина поехала")
+
+    # метод стоять
+    def stop(self):
+        print("Машина остановилась")
+
+    # метод повернуть (направление)
+    def turn(self, direction):
+        print(f"Машина повернула {direction}")
+
+    # метод показать скорость
+    def show_speed(self):
+        return f"Ваша скорость {self.speed} км/час"
+
+
+# класс городской машины
+class TownCar(Car):
+    # переопределенный конструктор
+    def __init__(self, speed, color, name, is_police=False):
+        super().__init__(speed, color, name, is_police)
+
+    # переопределенный метод показа скорости с проверкой превышения
+    def show_speed(self):
+        if self.speed > 60:
+            return f"Вы превысили скорость! Ваша скорость {self.speed} км/час"
+        else:
+            return f"Ваша скорость {self.speed} км/час"
+
+
+# класс спортивного автомобиля
+class SportCar(Car):
+    # переопределенный конструктор
+    def __init__(self, speed, color, name, is_police=False):
+        super().__init__(speed, color, name, is_police)
+
+    # переопределенный метод показа скорости с проверкой превышения
+    def show_speed(self):
+        if self.speed > 90:
+            return f"Вы превысили скорость! Ваша скорость {self.speed} км/час"
+        else:
+            return f"Ваша скорость {self.speed} км/час"
+
+
+# класс рабочей машины
+class WorkCar(Car):
+    # переопределенный конструктор
+    def __init__(self, speed, color, name, is_police=False):
+        super().__init__(speed, color, name, is_police)
+
+    # переопределенный метод показа скорости с проверкой на превышение
+    def show_speed(self):
+        if self.speed > 40:
+            return f"Вы превысили скорость! Ваша скорость {self.speed} км/час"
+        else:
+            return f"Ваша скорость {self.speed} км/час"
+
+
+# класс полицейской машины
+class PoliceCar(Car):
+    # переопределнный конструктор
+    def __init__(self, speed, color, name, is_police=True):
+        super().__init__(speed, color, name, is_police)
+
+    # переопределенный метод показа скорости с проверкой превышения
+    def show_speed(self):
+        if self.speed > 60:
+            return f"Вы превысили скорость! Ваша скорость {self.speed} км/час"
+        else:
+            return f"Ваша скорость {self.speed} км/час"
+
+
+# Выполняем само задание
+# Создайте экземпляры классов, передайте значения атрибутов
+car1 = TownCar(63, "red", "3874")
+car2 = SportCar(98, "yellow", "6666")
+car3 = WorkCar(36, "gray", "3810")
+car4 = PoliceCar(65, "white", "7365")
+print("")
+# Выполните доступ к атрибутам, выведите результат.
+print(f"Цвет городской машины - {car1.color}")
+print(f"Номер спортивной машины - {car2.name}")
+print("")
+#Выполните вызов методов и также покажите результат.
+car1.stop()
+car3.turn("направо")
+car4.go()
+print("")
+print(car1.show_speed())
+print(car2.show_speed())
+print(car3.show_speed())
+print(car4.show_speed())
+
+
+Result:
+
+Цвет городской машины - red
+Номер спортивной машины - 6666
+
+Машина остановилась
+Машина повернула направо
+Машина поехала
+
+Вы превысили скорость! Ваша скорость 63 км/час
+Вы превысили скорость! Ваша скорость 98 км/час
+Ваша скорость 36 км/час
+Вы превысили скорость! Ваша скорость 65 км/час
+
+
+
+=======================================================
+
+Task 6
+
+'''
+6. Реализовать класс Stationery (канцелярская принадлежность).
+Определить в нем атрибут title (название) и метод draw (отрисовка).
+Метод выводит сообщение “Запуск отрисовки.” Создать три дочерних класса
+Pen (ручка), Pencil (карандаш), Handle (маркер).
+В каждом из классов реализовать переопределение метода draw.
+Для каждого из классов метод должен выводить уникальное сообщение.
+Создать экземпляры классов и проверить, что выведет описанный метод для каждого экземпляра.
+'''
+
+# класс канцелярской принадлежности
+class Stationery:
+    titel: str
+
+    # конструктор
+    def __init__(self, titel):
+        self.titel = titel
+
+    # метод рисования
+    def draw(self):
+        print("Запуск отрисовки")
+
+# класс ручки с конструктором и переопределенным методом рисования
+class Pen(Stationery):
+    def __init__(self, titel):
+        super().__init__(titel)
+
+    def draw(self):
+        print(f"{self.titel} рисует ручкой")
+
+# класс карандаша с конструктором и переопределенным методом рисования
+class Pencil(Stationery):
+    def __init__(self, titel):
+        super().__init__(titel)
+
+    def draw(self):
+        print(f"{self.titel} рисует карандашом")
+
+# класс маркера с конструктором и переопределенным методом рисования
+class Handle(Stationery):
+    def __init__(self, titel):
+        super().__init__(titel)
+
+    def draw(self):
+        print(f"{self.titel} рисует маркером")
+
+# экземпляры классов
+pen = Pen("PenMark")
+pencil = Pencil("PencilMark")
+handle = Handle("HandleMark")
+
+# вызов методов
+pen.draw()
+pencil.draw()
+handle.draw()
+
+
+Result:
+
+PenMark рисует ручкой
+PencilMark рисует карандашом
+HandleMark рисует маркером
